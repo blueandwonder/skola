@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.itextpdf.io.font.constants.StandardFonts;
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.AreaBreak;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EasyPdf extends EasyFormat<EasyPdf> {
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     private PageSize pageSize;
     private String filename;
 
@@ -29,6 +32,10 @@ public class EasyPdf extends EasyFormat<EasyPdf> {
     private EasyPdf(PageSize pageSize, String format, Object... args) {
         this.pageSize = pageSize;
         this.filename = String.format(format, args);
+
+        fontName(StandardFonts.COURIER);
+        fontSize(20);
+        fontColor(ColorConstants.BLACK);
     }
 
     public EasyPdf add(EasyObject object) {
@@ -54,23 +61,18 @@ public class EasyPdf extends EasyFormat<EasyPdf> {
 
     public void createDocument() {
         try {
-            // XXX not like this
-            PdfFont plain = PdfFontFactory.createFont(StandardFonts.COURIER);
-            int fontSize = 20;
-
             Document document = new Document(new PdfDocument(new PdfWriter(filename)), pageSize);
-            document.setFont(plain);
-            document.setFontSize(fontSize);
+            setup(document);
 
-            objects.forEach(object -> object.append(document));
+            for (EasyObject each : objects) {
+                each.append(document);
+            }
 
             document.close();
-
-            System.out.println("Created " + filename);
+            logger.info("Created document {}", filename);
         }
         catch (Exception e) {
-            System.err.println("Failed to create " + filename);
-            e.printStackTrace();
+            logger.info("Failed to create {}", filename, e);
         }
     }
 

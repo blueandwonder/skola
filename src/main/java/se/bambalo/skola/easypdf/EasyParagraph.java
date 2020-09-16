@@ -6,18 +6,16 @@ import com.itextpdf.layout.element.Paragraph;
 public class EasyParagraph extends EasyObject<EasyParagraph> {
     private String text;
 
-    public EasyParagraph() {
-    }
-
     public EasyParagraph(String format, Object... args) {
         text = String.format(format, args);
     }
 
     @Override
-    public void append(Document document) {
+    public void append(Document document) throws Exception {
         Paragraph paragraph = new Paragraph();
-        // TODO fix this
-        paragraph.add(text != null ? text : "-");
+        paragraph.add(text != null ? text : "");
+
+        setup(paragraph);
 
         document.add(paragraph);
     }

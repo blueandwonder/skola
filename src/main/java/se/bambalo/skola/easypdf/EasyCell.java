@@ -1,7 +1,5 @@
 package se.bambalo.skola.easypdf;
 
-import com.itextpdf.kernel.colors.Color;
-import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
@@ -9,15 +7,17 @@ import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
 
 public class EasyCell extends EasyFormat<EasyCell> {
+
+    public static EasyCell EMTPY = new EasyCell();
+    public static EasyCell EMTPY_WITH_BORDER = new EasyCell().withBorder();
+
     private String text;
     private TextAlignment horizontal = TextAlignment.CENTER;
     private VerticalAlignment vertical = VerticalAlignment.MIDDLE;
-    private Color color= ColorConstants.BLACK;
     private float height;
     private boolean border;
-    private boolean bold;
 
-    public EasyCell() {
+    private EasyCell() {
     }
 
     public EasyCell(String format, Object... args) {
@@ -45,31 +45,6 @@ public class EasyCell extends EasyFormat<EasyCell> {
 
     public EasyCell height(float height) {
         this.height = height;
-        return this;
-    }
-
-    // TODO add fontSize
-
-    // TODO pass some of these to EasyFormat instead
-    public EasyCell black() {
-        return color(ColorConstants.BLACK);
-    }
-
-    public EasyCell grey() {
-        return color(ColorConstants.LIGHT_GRAY);
-    }
-
-    public EasyCell bold() {
-        bold = true;
-        return this;
-    }
-
-    public EasyCell color(Color color) {
-        this.color = color;
-        return this;
-    }
-
-    public EasyCell withBorder(Border border) {
         return this;
     }
 
@@ -107,15 +82,12 @@ public class EasyCell extends EasyFormat<EasyCell> {
         return this;
     }
 
-    Cell createCell() {
+    Cell createCell() throws Exception {
         Paragraph paragraph = new Paragraph();
 
         if (text != null) {
             paragraph.add(text);
-            paragraph.setFontColor(color);
-            if (bold) {
-                paragraph.setBold();
-            }
+            setup(paragraph);
         }
 
         Cell result = new Cell().add(paragraph)

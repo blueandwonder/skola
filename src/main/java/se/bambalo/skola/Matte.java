@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.kernel.colors.ColorConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.bambalo.skola.easypdf.EasyCell;
 import se.bambalo.skola.easypdf.EasyParagraph;
 import se.bambalo.skola.easypdf.EasyPdf;
@@ -13,13 +17,13 @@ import se.bambalo.skola.easypdf.EasyTable;
 
 public class Matte {
 
-    private static final String DIRECTORY = "/tmp/ruta/";
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    private static final String DIRECTORY = "/tmp/ruta";
 
     private static final char MULTIPLY = 183;
     private static final char PLUS = '+';
     private static final char MINUS = '-';
-
-    private EasyCell EMPTY_CELL = new EasyCell();
 
     private List<Integer> range(int from, int to) {
         return IntStream.rangeClosed(from, to)
@@ -232,8 +236,8 @@ public class Matte {
                         .limit(45)
                         .forEach(number -> {
                             table.add(new EasyCell(number).left().withBorder());
-                            table.add(new EasyCell().withBorder());
-                            table.add(new EasyCell());
+                            table.add(EasyCell.EMTPY_WITH_BORDER);
+                            table.add(EasyCell.EMTPY);
                         });
 
         EasyPdf.portrait("%s/hundrakompisar.pdf", DIRECTORY)
@@ -272,13 +276,13 @@ public class Matte {
                                             .height(40)
                                             .add(new EasyCell(tabell * 1))
                                             .add(new EasyCell(tabell * 2))
-                                            .add(EMPTY_CELL)
-                                            .add(EMPTY_CELL)
-                                            .add(EMPTY_CELL)
-                                            .add(EMPTY_CELL)
-                                            .add(EMPTY_CELL)
-                                            .add(EMPTY_CELL)
-                                            .add(EMPTY_CELL)
+                                            .add(EasyCell.EMTPY)
+                                            .add(EasyCell.EMTPY)
+                                            .add(EasyCell.EMTPY)
+                                            .add(EasyCell.EMTPY)
+                                            .add(EasyCell.EMTPY)
+                                            .add(EasyCell.EMTPY)
+                                            .add(EasyCell.EMTPY)
                                             .add(new EasyCell(tabell * 10));
 
         EasyTable exercise = new EasyTable().rows(10)
@@ -296,6 +300,45 @@ public class Matte {
                .createDocument();
     }
 
+    private void test() {
+        EasyTable first = new EasyTable().rows(2)
+                                         .columns(2)
+                                         .height(30)
+                                         .withBorder()
+                                         .add(new EasyCell("default look"))
+                                         .add(new EasyCell("with fontName").fontName(StandardFonts.COURIER_BOLD))
+                                         .add(new EasyCell("with fontsize").fontSize(20))
+                                         .add(new EasyCell("with color").fontColor(ColorConstants.RED));
+
+        EasyTable second = new EasyTable().rows(2)
+                                          .columns(2)
+                                          .height(30)
+                                          .fontName(StandardFonts.TIMES_ITALIC)
+                                          .fontSize(17)
+                                          .fontColor(ColorConstants.MAGENTA)
+                                          .withBorder()
+                                          .add(new EasyCell("default look"))
+                                          .add(new EasyCell("with fontName").fontName(StandardFonts.COURIER_BOLD))
+                                          .add(new EasyCell("with fontsize").fontSize(20))
+                                          .add(new EasyCell("with color").fontColor(ColorConstants.RED));
+
+        EasyPdf.portrait("%s/test.pdf", DIRECTORY)
+               .fontName(StandardFonts.TIMES_ITALIC)
+               .fontSize(15)
+               .fontColor(ColorConstants.DARK_GRAY)
+               .add(new EasyParagraph("Default"))
+               .add(new EasyParagraph("With fontName").fontName(StandardFonts.HELVETICA_BOLD))
+               .add(new EasyParagraph("With fontSize").fontSize(36))
+               .add(new EasyParagraph("With fontColor").fontColor(ColorConstants.GREEN))
+               .space()
+               .add(new EasyParagraph("Table without defaults"))
+               .space()
+               .add(first)
+               .doubleSpace()
+               .add(new EasyParagraph("Table with defaults"))
+               .add(second)
+               .createDocument();
+    }
 
     private List<Pair> getTiokompisar() {
         List<Pair> kompisar = new ArrayList<>();
@@ -345,6 +388,8 @@ public class Matte {
 
             matte.hundrakompisar();
             matte.alla_tabeller();
+
+            matte.test();
         }
         catch (Exception e) {
             e.printStackTrace();

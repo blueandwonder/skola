@@ -61,30 +61,43 @@ public class EasyTable extends EasyObject<EasyTable> {
     }
 
     public EasyTable add(EasyCell cell) {
-        // TODO inherit withBorder from table
-
         if (height > 0) {
             cell.height(height);
         }
         if (border) {
             cell.withBorder();
         }
-
         cells.add(cell);
         return this;
     }
 
     @Override
-    public void append(Document document) {
+    public void append(Document document) throws Exception {
         Table table = new Table(getWidths());
         table.setFixedLayout();
         table.setWidth(UnitValue.createPercentValue(100));
+
+        setup(table);
+        fillLastRow();
 
         for (EasyCell each : getOrderedCells()) {
             table.addCell(each.createCell());
         }
 
         document.add(table);
+    }
+
+    private float[] getWidths() {
+        if (widths != null) {
+            return widths;
+        }
+
+        float[] result = new float[columns];
+        for (int i = 0; i < columns; i++) {
+            result[i] = 10;
+        }
+
+        return result;
     }
 
     private List<EasyCell> getOrderedCells() {
@@ -108,17 +121,13 @@ public class EasyTable extends EasyObject<EasyTable> {
         return result;
     }
 
-    private float[] getWidths() {
-        if (widths != null) {
-            return widths;
+    private void fillLastRow() {
+        int cellsOnLastRow = cells.size() % columns;
+        if (cellsOnLastRow != 0) {
+            for (int i = cellsOnLastRow; i < columns; i++) {
+                add(EasyCell.EMTPY);
+            }
         }
-
-        float[] result = new float[columns];
-        for (int i = 0; i < columns; i++) {
-            result[i] = 10;
-        }
-
-        return result;
     }
 
     @Override
