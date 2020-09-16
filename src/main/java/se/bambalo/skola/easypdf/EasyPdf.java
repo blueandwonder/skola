@@ -8,12 +8,21 @@ import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.draw.DottedLine;
+import com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer;
+import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.AreaBreak;
+import com.itextpdf.layout.element.LineSeparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class EasyPdf extends EasyFormat<EasyPdf> {
+
+    private static final EasyLineSeparator SOLID_LINE_SEPARATOR = new EasyLineSeparator(new SolidLine(1f));
+    private static final EasyLineSeparator DOTTED_LINE_SEPARATOR = new EasyLineSeparator(new DottedLine(1f));
+    private static final EasyPageBreak PAGE_BREAK = new EasyPageBreak();
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private PageSize pageSize;
@@ -54,8 +63,23 @@ public class EasyPdf extends EasyFormat<EasyPdf> {
         return this;
     }
 
-    public EasyPdf pagebreak() {
-        objects.add(new PageBreak());
+    public EasyPdf separator(ILineDrawer drawer) {
+        objects.add(new EasyLineSeparator(drawer));
+        return this;
+    }
+
+    public EasyPdf solidLineSeparator() {
+        objects.add(SOLID_LINE_SEPARATOR);
+        return this;
+    }
+
+    public EasyPdf dottedLineSeparator() {
+        objects.add(DOTTED_LINE_SEPARATOR);
+        return this;
+    }
+
+    public EasyPdf pageBreak() {
+        objects.add(PAGE_BREAK);
         return this;
     }
 
@@ -81,15 +105,18 @@ public class EasyPdf extends EasyFormat<EasyPdf> {
         return this;
     }
 
-    private static class PageBreak extends EasyObject<PageBreak> {
+
+    private static class EasyPageBreak extends EasyObject<EasyPageBreak> {
+        private AreaBreak areaBreak = new AreaBreak();
+
         @Override
-        public PageBreak self() {
+        public EasyPageBreak self() {
             return this;
         }
 
         @Override
         void append(Document document) {
-            document.add(new AreaBreak());
+            document.add(areaBreak);
         }
     }
 

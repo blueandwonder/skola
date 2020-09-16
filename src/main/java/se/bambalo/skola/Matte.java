@@ -8,9 +8,13 @@ import java.util.stream.IntStream;
 
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.bambalo.skola.easypdf.EasyCell;
+import se.bambalo.skola.easypdf.EasyLineSeparator;
+import se.bambalo.skola.easypdf.EasyList;
+import se.bambalo.skola.easypdf.EasyListItem;
 import se.bambalo.skola.easypdf.EasyParagraph;
 import se.bambalo.skola.easypdf.EasyPdf;
 import se.bambalo.skola.easypdf.EasyTable;
@@ -293,7 +297,7 @@ public class Matte {
 
         EasyPdf.landscape( "%s/tabell-%d.pdf", DIRECTORY, tabell)
                .add(square)
-               .pagebreak()
+               .pageBreak()
                .add(sequence)
                .doubleSpace()
                .add(exercise)
@@ -322,6 +326,20 @@ public class Matte {
                                           .add(new EasyCell("with fontsize").fontSize(20))
                                           .add(new EasyCell("with color").fontColor(ColorConstants.RED));
 
+        EasyTable third = new EasyTable().rows(3)
+                                         .columns(1)
+                                         .height(30)
+                                         .withBorder()
+                                         .add(new EasyCell("top left").top().left())
+                                         .add(new EasyCell("bottom right").bottom().right())
+                                         .add(new EasyCell("middle center").middle().center());
+
+
+        EasyList list = new EasyList().fontColor(ColorConstants.BLUE)
+                                      .add(new EasyListItem("one"))
+                                      .add(new EasyListItem("two").fontSize(22))
+                                      .add(new EasyListItem("three"));
+
         EasyPdf.portrait("%s/test.pdf", DIRECTORY)
                .fontName(StandardFonts.TIMES_ITALIC)
                .fontSize(15)
@@ -337,6 +355,19 @@ public class Matte {
                .doubleSpace()
                .add(new EasyParagraph("Table with defaults"))
                .add(second)
+               .space()
+               .solidLineSeparator()
+               .space()
+               .dottedLineSeparator()
+               .space()
+               .add(new EasyLineSeparator(new SolidLine()).color(ColorConstants.ORANGE))
+               .space()
+               .dottedLineSeparator()
+               .space()
+               .add(new EasyParagraph("Table with positions").bold())
+               .add(third)
+               .doubleSpace()
+               .add(list)
                .createDocument();
     }
 

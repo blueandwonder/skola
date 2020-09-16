@@ -8,8 +8,8 @@ import com.itextpdf.layout.property.VerticalAlignment;
 
 public class EasyCell extends EasyFormat<EasyCell> {
 
-    public static EasyCell EMTPY = new EasyCell();
-    public static EasyCell EMTPY_WITH_BORDER = new EasyCell().withBorder();
+    public static final EasyCell EMTPY = new EasyCell();
+    public static final EasyCell EMTPY_WITH_BORDER = new EasyCell().withBorder();
 
     private String text;
     private TextAlignment horizontal = TextAlignment.CENTER;
@@ -21,16 +21,11 @@ public class EasyCell extends EasyFormat<EasyCell> {
     }
 
     public EasyCell(String format, Object... args) {
-        text(format, args);
+        text = String.format(format, args);
     }
 
     public EasyCell(int number) {
         text = Integer.toString(number);
-    }
-
-    public EasyCell text(String format, Object... args) {
-        this.text = String.format(format, args);
-        return this;
     }
 
     public EasyCell withBorder() {
@@ -109,4 +104,5 @@ public class EasyCell extends EasyFormat<EasyCell> {
     public EasyCell self() {
         return this;
     }
+
 }

@@ -122,9 +122,9 @@ public class EasyTable extends EasyObject<EasyTable> {
     }
 
     private void fillLastRow() {
-        int cellsOnLastRow = cells.size() % columns;
-        if (cellsOnLastRow != 0) {
-            for (int i = cellsOnLastRow; i < columns; i++) {
+        int numberOfCellsOnLastRow = cells.size() % columns;
+        if (numberOfCellsOnLastRow != 0) {
+            for (int i = numberOfCellsOnLastRow; i < columns; i++) {
                 add(EasyCell.EMTPY);
             }
         }
@@ -134,4 +134,5 @@ public class EasyTable extends EasyObject<EasyTable> {
     public EasyTable self() {
         return this;
     }
+    
 }

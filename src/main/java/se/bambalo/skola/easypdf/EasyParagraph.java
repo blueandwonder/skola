@@ -4,6 +4,7 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 
 public class EasyParagraph extends EasyObject<EasyParagraph> {
+
     private String text;
 
     public EasyParagraph(String format, Object... args) {
@@ -24,4 +25,5 @@ public class EasyParagraph extends EasyObject<EasyParagraph> {
     public EasyParagraph self() {
         return this;
     }
+
 }

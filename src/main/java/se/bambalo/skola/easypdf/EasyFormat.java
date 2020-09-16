@@ -6,6 +6,7 @@ import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.layout.ElementPropertyContainer;
 
 public abstract class EasyFormat<T extends EasyFormat<?>> {
+
     private String fontName;
     private float fontSize;
     private Color fontColor;
@@ -55,4 +56,5 @@ public abstract class EasyFormat<T extends EasyFormat<?>> {
             container.setBold();
         }
     }
+
 }
