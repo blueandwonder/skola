@@ -1,810 +1,350 @@
 package se.bambalo.skola;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.itextpdf.io.font.constants.StandardFonts;
-import com.itextpdf.kernel.colors.ColorConstants;
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.borders.Border;
-import com.itextpdf.layout.element.AreaBreak;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.HorizontalAlignment;
-import com.itextpdf.layout.property.TextAlignment;
-import com.itextpdf.layout.property.UnitValue;
-import com.itextpdf.layout.property.VerticalAlignment;
+import se.bambalo.skola.easypdf.EasyCell;
+import se.bambalo.skola.easypdf.EasyParagraph;
+import se.bambalo.skola.easypdf.EasyPdf;
+import se.bambalo.skola.easypdf.EasyTable;
 
 public class Matte {
 
     private static final String DIRECTORY = "/tmp/ruta/";
-    private static final boolean SHUFFLE = true;
 
-    private static final float[] WIDTHS = {10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
-    public static final String ANSWER_LINE = "___";
+    private static final char MULTIPLY = 183;
+    private static final char PLUS = '+';
+    private static final char MINUS = '-';
 
-    void tabell() throws Exception {
-        for (int series = 1; series < 11; series++) {
-            String filename = String.format("%s/tabell-%s.pdf", DIRECTORY, series);
+    private EasyCell EMPTY_CELL = new EasyCell();
 
-            System.out.println("Creating file " + filename);
-
-            PdfFont plain = PdfFontFactory.createFont(StandardFonts.COURIER);
-            PdfFont bold = PdfFontFactory.createFont(StandardFonts.COURIER_BOLD);
-
-            int fontSize = 20;
-            int startAt = 0;
-
-            Document document = new Document(new PdfDocument(new PdfWriter(filename)), PageSize.A4.rotate());
-            document.setFont(plain);
-
-            {
-                document.add(new Paragraph("Tabell: " + series).setFont(bold).setFontSize(fontSize));
-                document.add(new Paragraph());
-                document.add(new Paragraph());
-
-                Table table = new Table(WIDTHS);
-                table.setFixedLayout();
-                table.setWidth(UnitValue.createPercentValue(100));
-
-                for (int i = 0; i < 100; i++) {
-                    int number = i + startAt;
-
-                    Paragraph paragraph = new Paragraph(Integer.toString(number)).setFontSize(fontSize);
-
-                    if (number % series == 0) {
-                        paragraph.setFont(bold).setFontColor(ColorConstants.BLACK);
-                    }
-                    else {
-                        paragraph.setFontColor(ColorConstants.LIGHT_GRAY);
-                    }
-
-                    table.addCell(new Cell().add(paragraph)
-                                            .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                            .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                                            .setTextAlignment(TextAlignment.CENTER)
-                                            .setHeight(40));
-                }
-
-                document.add(table);
-            }
-
-            document.add(new AreaBreak());
-
-            {
-                float[] widths = {10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
-
-                Table table = new Table(widths);
-                table.setFixedLayout();
-                table.setWidth(UnitValue.createPercentValue(100));
-
-
-                for (int i = 1; i < 11; i++) {
-                    Paragraph paragraph = new Paragraph(Integer.toString(i * series)).setFontSize(fontSize);
-
-                    if (i > 2 && i < 10) {
-                        paragraph = new Paragraph();
-                    }
-
-                    table.addCell(new Cell().add(paragraph)
-                                            // .setBorder(Border.NO_BORDER)
-                                            .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                            .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                                            .setTextAlignment(TextAlignment.CENTER)
-                                            .setHeight(40));
-                }
-
-                document.add(table);
-            }
-
-            {
-                document.add(new Paragraph());
-                document.add(new Paragraph());
-                document.add(new Paragraph());
-
-                float[] widths = { 10 };
-
-                Table table = new Table(widths);
-                table.setFixedLayout();
-                table.setWidth(UnitValue.createPercentValue(50));
-
-                List<Integer> numbers = IntStream.rangeClosed(1, 10)
-                                                 .mapToObj(Integer::valueOf)
-                                                 .collect(Collectors.toList());
-
-                if (SHUFFLE) {
-                    Collections.shuffle(numbers);
-                }
-
-                for (Integer each : numbers) {
-                    String str = String.format("%d . %d = %s", each, series, ANSWER_LINE);
-
-                    Paragraph paragraph = new Paragraph(str).setFontSize(fontSize);
-
-                    table.addCell(new Cell().add(paragraph)
-                                            .setBorder(Border.NO_BORDER)
-                                            .setVerticalAlignment(VerticalAlignment.BOTTOM)
-                                            .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                                            .setTextAlignment(TextAlignment.LEFT)
-                                            .setHeight(40));
-                }
-
-                document.add(table);
-            }
-
-            document.close();
-        }
+    private List<Integer> range(int from, int to) {
+        return IntStream.rangeClosed(from, to)
+                        .mapToObj(Integer::valueOf)
+                        .collect(Collectors.toList());
     }
 
-    private void multiplikation() throws Exception {
-        String filename = String.format("%s/multiplikation.pdf", DIRECTORY);
-
-        System.out.println("Creating file " + filename);
-
-        PdfFont plain = PdfFontFactory.createFont(StandardFonts.COURIER);
-
-        int fontSize = 18;
-
-        Document document = new Document(new PdfDocument(new PdfWriter(filename)), PageSize.A4.rotate());
-        document.setFont(plain);
-        document.setFontSize(fontSize);
-
-        {
-            float[] widths = {10, 10, 10, 10};
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(100));
-            table.setFont(plain);
-            table.setFontSize(fontSize);
-
-            for (int g = 1; g <= 10; g++) {
-                for (int t : Arrays.asList(2, 3, 4, 5)) {
-                    table.addCell(new Cell().add(paragraph(String.format(" %d %c %d = ____", g, 183, t)))
-                                            .setBorder(Border.NO_BORDER)
-                                            .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                            .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                                            .setTextAlignment(TextAlignment.LEFT));
-                }
-            }
-
-            document.add(table);
-        }
-
-        document.close();
+    private List<Integer> shuffled(int from, int to) {
+        List<Integer> result = range(from, to);
+        Collections.shuffle(result);
+        return result;
     }
 
-    void tioKompisarPlus() throws Exception {
-        String filename = String.format("%s/tiokompisar-plus.pdf", DIRECTORY);
+    void multiplikation() {
+        EasyTable table = new EasyTable().rows(10)
+                                         .columns(4)
+                                         .fillOrder(EasyTable.FillOrder.BY_COLUMN);
 
-        System.out.println("Creating file " + filename);
+        for (int col : range(2, 5)) {
+            for (int row : range(1, 10)) {
+                table.add(new EasyCell(" %d %c %d = ____", row, MULTIPLY, col).left().middle());
+            }
+        }
 
-        PdfFont plain = PdfFontFactory.createFont(StandardFonts.COURIER);
-        PdfFont bold = PdfFontFactory.createFont(StandardFonts.COURIER_BOLD);
+        EasyPdf.landscape("%s/multiplikation.pdf", DIRECTORY)
+               .add(table)
+               .createDocument();
+    }
 
-        int fontSize = 20;
+    void tiokompisar_addition() {
+        EasyTable table = new EasyTable().rows(20)
+                                         .columns(1)
+                                         .height(30);
 
-        Document document = new Document(new PdfDocument(new PdfWriter(filename)), PageSize.A4);
-        document.setFont(plain);
+        getTiokompisar().forEach(each -> table.add(new EasyCell("%s + %s = 10", each.first, each.second).left()));
 
-        document.add(new Paragraph("Tiokompisar").setFont(bold).setFontSize(fontSize));
-        document.add(new Paragraph());
-        document.add(new Paragraph());
+        EasyPdf.portrait("%s/tiokompisar-plus.pdf", DIRECTORY)
+               .add(new EasyParagraph("Tiokompisar Plus"))
+               .space()
+               .add(table)
+               .createDocument();
+    }
+
+    void tiokompisar_subtraktion() {
+        EasyTable table = new EasyTable().rows(20)
+                                         .columns(1)
+                                         .height(30);
+
+        getTiokompisar().forEach(each -> table.add(new EasyCell("10 - %s = %s", each.first, each.second).left()));
+
+        EasyPdf.portrait("%s/tiokompisar-minus.pdf", DIRECTORY)
+               .add(new EasyParagraph("Tiokompisar Minus"))
+               .space()
+               .add(table)
+               .createDocument();
+    }
+
+    void addition() {
+        List<Pair> pairs = new ArrayList<>();
 
         {
-            float[] widths = { 10 };
+            for (int i = 0; i < 6; i++) {
+                for (int j = 0; j < 6; j++) {
+                    pairs.add(new Pair(i, j));
+                }
+            }
+        }
 
-            List<TioKompis> kompisar = new ArrayList<>();
-
+        {
             for (int i = 1; i < 10; i++) {
-                kompisar.add(new TioKompis(i, true));
-                kompisar.add(new TioKompis(i, false));
+                for (int j = 1; j < 10; j++) {
+                    pairs.add(new Pair(i, j));
+                }
             }
-
-            Collections.shuffle(kompisar);
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(50));
-
-            int height = 25;
-
-            for (TioKompis each : kompisar) {
-                table.addCell(new Cell().add(paragraph(String.format("%s + %s = 10", each.first, each.second)))
-                                        .setBorder(Border.NO_BORDER)
-                                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                        .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                                        .setTextAlignment(TextAlignment.CENTER)
-                                        .setHeight(height));
-            }
-
-            document.add(table);
         }
 
-        document.close();
+        withoutHelpTable("addition", pairs, PLUS);
     }
 
-    void tioKompisarMinus() throws Exception {
-        String filename = String.format("%s/tiokompisar-minus.pdf", DIRECTORY);
-
-        System.out.println("Creating file " + filename);
-
-        PdfFont plain = PdfFontFactory.createFont(StandardFonts.COURIER);
-        PdfFont bold = PdfFontFactory.createFont(StandardFonts.COURIER_BOLD);
-
-        int fontSize = 20;
-
-        Document document = new Document(new PdfDocument(new PdfWriter(filename)), PageSize.A4);
-        document.setFont(plain);
-
-        document.add(new Paragraph("Tiokompisar").setFont(bold).setFontSize(fontSize));
-        document.add(new Paragraph());
-        document.add(new Paragraph());
+    private void subtraktion() {
+        List<Pair> pairs = new ArrayList<>();
 
         {
-            float[] widths = { 10 };
-
-            List<TioKompis> kompisar = new ArrayList<>();
-
+            for (int i = 0; i < 6; i++) {
+                for (int j = 0; j <= i; j++) {
+                    pairs.add(new Pair(i, j));
+                }
+            }
+        }
+        {
             for (int i = 1; i < 10; i++) {
-                kompisar.add(new TioKompis(i, true));
-                kompisar.add(new TioKompis(i, false));
+                for (int j = 1; j <= i; j++) {
+                    pairs.add(new Pair(i, j));
+                }
             }
-
-            Collections.shuffle(kompisar);
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(50));
-
-            int height = 25;
-
-            for (TioKompis each : kompisar) {
-                table.addCell(new Cell().add(paragraph(String.format("10 - %s = %s", each.first, each.second)))
-                                        .setBorder(Border.NO_BORDER)
-                                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                        .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                                        .setTextAlignment(TextAlignment.CENTER)
-                                        .setHeight(height));
-            }
-
-            document.add(table);
         }
 
-        document.close();
+        withoutHelpTable("subtraktion", pairs, MINUS);
     }
 
-    private void addition() throws Exception {
-        String filename = String.format("%s/addition.pdf", DIRECTORY);
+    private void addition_tiotalsovergang() {
+        List<Pair> pairs = new ArrayList<>();
 
-        System.out.println("Creating file " + filename);
+        for (int i = 1; i < 10; i++) {
+            for (int j = 1; j < 10; j++) {
+                if (i + j > 10) {
+                    pairs.add(new Pair(i, j));
+                }
+            }
+        }
 
-        PdfFont plain = PdfFontFactory.createFont(StandardFonts.COURIER);
+        withHelpTable("addition-tiotalsövergång", pairs, PLUS);
+    }
 
-        int fontSize = 18;
+    private void subtraktion_hoga_ental() {
+        List<Pair> pairs = new ArrayList<>();
 
-        Document document = new Document(new PdfDocument(new PdfWriter(filename)), PageSize.A4);
-        document.setFont(plain);
-        document.setFontSize(fontSize);
+        for (int i = 5; i < 10; i++) {
+            for (int j = 2; j < i; j++) {
+                pairs.add(new Pair(i, j));
+            }
+        }
+
+        withHelpTable("subtraktion-höga-ental", pairs, MINUS);
+    }
+
+    private void subtraktion_tiotalsovergang() {
+        List<Pair> pairs = new ArrayList<>();
+
+        for (int i = 11; i < 20; i++) {
+            for (int j = 2; j < 10; j++) {
+                if (i - j < 10) {
+                    pairs.add(new Pair(i, j));
+                }
+            }
+        }
+
+        withHelpTable("subtraktion-tiotalsövergång", pairs, MINUS);
+    }
+
+    private void subtraktion_mix()  {
+        List<Pair> pairs = new ArrayList<>();
 
         {
-            float[] widths = {10, 10, 10};
+            for (int i = 4; i < 10; i++) {
+                for (int j = 2; j < i; j++) {
+                    pairs.add(new Pair(i, j));
+                }
+            }
+        }
 
-            List<Pair> pairs = new ArrayList<>();
-
-            {
-                for (int i = 0; i < 6; i++) {
-                    for (int j = 0; j < 6; j++) {
+        {
+            for (int i = 11; i < 20; i++) {
+                for (int j = 2; j < 10; j++) {
+                    if (i - j < 10) {
                         pairs.add(new Pair(i, j));
                     }
                 }
             }
-
-            {
-                for (int i = 1; i < 10; i++) {
-                    for (int j = 1; j < 10; j++) {
-                        pairs.add(new Pair(i, j));
-                    }
-                }
-            }
-
-            if (SHUFFLE) {
-                Collections.shuffle(pairs);
-            }
-
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(100));
-            table.setFont(plain);
-            table.setFontSize(fontSize);
-
-            for (Pair each : pairs) {
-
-                table.addCell(new Cell().add(paragraph(String.format(" %d + %d = ", each.first, each.second)))
-                                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                        .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                                        .setTextAlignment(TextAlignment.LEFT));
-                                        // .setHeight(height));
-            }
-
-            document.add(table);
         }
 
-        document.close();
+        withHelpTable("subtraktion-mix", pairs, MINUS);
     }
 
-    private void subtraktion() throws Exception {
-        String filename = String.format("%s/subtraktion.pdf", DIRECTORY);
+    private void withHelpTable(String filename, List<Pair> pairs, char operator) {
+        EasyTable top = new EasyTable().rows(2)
+                                       .columns(10)
+                                       .height(40)
+                                       .withBorder();
 
-        System.out.println("Creating file " + filename);
+        range(1, 20).forEach(each -> top.add(new EasyCell(each)));
 
-        PdfFont plain = PdfFontFactory.createFont(StandardFonts.COURIER);
+        EasyTable exercise = new EasyTable().rows(12)
+                                            .columns(3)
+                                            .withBorder();
 
-        int fontSize = 18;
+        Collections.shuffle(pairs);
 
-        Document document = new Document(new PdfDocument(new PdfWriter(filename)), PageSize.A4);
-        document.setFont(plain);
-        document.setFontSize(fontSize);
+        pairs.forEach(each -> exercise.add(new EasyCell("%s %c %s =", each.first, operator, each.second).left()));
 
-        {
-            float[] widths = {10, 10, 10};
-
-            List<Pair> pairs = new ArrayList<>();
-
-            {
-                for (int i = 0; i < 6; i++) {
-                    for (int j = 0; j <= i; j++) {
-                        pairs.add(new Pair(i, j));
-                    }
-                }
-            }
-
-            {
-                for (int i = 1; i < 10; i++) {
-                    for (int j = 1; j <= i; j++) {
-                        pairs.add(new Pair(i, j));
-                    }
-                }
-            }
-
-            if (SHUFFLE) {
-                Collections.shuffle(pairs);
-            }
-
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(100));
-            table.setFont(plain);
-            table.setFontSize(fontSize);
-
-            for (Pair each : pairs) {
-
-                table.addCell(new Cell().add(paragraph(String.format(" %d - %d = ", each.first, each.second)))
-                                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                        .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                                        .setTextAlignment(TextAlignment.LEFT));
-            }
-
-            document.add(table);
-        }
-
-        document.close();
+        EasyPdf.portrait("%s/%s.pdf", DIRECTORY, filename)
+               .add(top)
+               .doubleSpace()
+               .doubleSpace()
+               .add(exercise)
+               .createDocument();
     }
 
-    private void additionTiotalsovergang() throws Exception {
-        String filename = String.format("%s/addition-tiotalsövergång.pdf", DIRECTORY);
+    private void withoutHelpTable(String filename, List<Pair> pairs, char operator) {
+        EasyTable exercise = new EasyTable().rows(12)
+                                            .columns(3)
+                                            .withBorder();
 
-        System.out.println("Creating file " + filename);
+        Collections.shuffle(pairs);
 
-        PdfFont plain = PdfFontFactory.createFont(StandardFonts.COURIER);
+        pairs.forEach(each -> exercise.add(new EasyCell("%s %c %s =", each.first, operator, each.second).left()));
 
-        int fontSize = 18;
-
-        Document document = new Document(new PdfDocument(new PdfWriter(filename)), PageSize.A4);
-        document.setFont(plain);
-        document.setFontSize(fontSize);
-
-        {
-            float[] widths = {10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(100));
-
-            for (int i = 1; i <= 20; i++) {
-                String str = Integer.toString(i);
-                Paragraph paragraph = new Paragraph(str).setFontSize(fontSize);
-
-                table.addCell(new Cell().add(paragraph)
-                                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                        .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                                        .setTextAlignment(TextAlignment.CENTER)
-                                        .setHeight(40));
-            }
-
-            document.add(table);
-        }
-
-        document.add(new Paragraph());
-        document.add(new Paragraph());
-        document.add(new Paragraph());
-        document.add(new Paragraph());
-
-        {
-            float[] widths = {10, 10, 10};
-
-            List<Pair> pairs = new ArrayList<>();
-
-            {
-                for (int i = 1; i < 10; i++) {
-                    for (int j = 1; j < 10; j++) {
-                        if (i + j > 10) {
-                            pairs.add(new Pair(i, j));
-                        }
-                    }
-                }
-            }
-
-            if (SHUFFLE) {
-                Collections.shuffle(pairs);
-            }
-
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(100));
-            table.setFont(plain);
-            table.setFontSize(fontSize);
-
-            for (Pair each : pairs) {
-
-                table.addCell(new Cell().add(paragraph(String.format(" %d + %d = ", each.first, each.second)))
-                                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                        .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                                        .setTextAlignment(TextAlignment.LEFT));
-                // .setHeight(height));
-            }
-
-            document.add(table);
-        }
-
-        document.close();
+        EasyPdf.portrait("%s/%s.pdf", DIRECTORY, filename)
+               .add(exercise)
+               .createDocument();
     }
 
-    private void subtraktionHogaEntal() throws Exception {
-        String filename = String.format("%s/subtraktion-höga-ental.pdf", DIRECTORY);
+    private void hundrakompisar() {
+        EasyTable table = new EasyTable().rows(15)
+                                         .columns(9)
+                                         .widths(10, 10, 3, 10, 10, 3, 10, 10, 3)
+                                         .height(40);
 
-        System.out.println("Creating file " + filename);
+        shuffled(0, 100).stream()
+                        .limit(45)
+                        .forEach(number -> {
+                            table.add(new EasyCell(number).left().withBorder());
+                            table.add(new EasyCell().withBorder());
+                            table.add(new EasyCell());
+                        });
 
-        PdfFont plain = PdfFontFactory.createFont(StandardFonts.COURIER);
-
-        int fontSize = 18;
-
-        Document document = new Document(new PdfDocument(new PdfWriter(filename)), PageSize.A4);
-        document.setFont(plain);
-        document.setFontSize(fontSize);
-
-        {
-            float[] widths = {10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(100));
-
-            for (int i = 1; i <= 10; i++) {
-                Paragraph paragraph = new Paragraph(Integer.toString(i)).setFontSize(fontSize);
-
-                table.addCell(new Cell().add(paragraph)
-                                        // .setBorder(Border.NO_BORDER)
-                                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                        .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                                        .setTextAlignment(TextAlignment.CENTER)
-                                        .setHeight(40));
-            }
-
-            document.add(table);
-        }
-
-        document.add(new Paragraph());
-        document.add(new Paragraph());
-        document.add(new Paragraph());
-        document.add(new Paragraph());
-
-        {
-            float[] widths = {10, 10, 10};
-
-            List<Pair> pairs = new ArrayList<>();
-
-            {
-                for (int i = 5; i < 10; i++) {
-                    for (int j = 2; j < i; j++) {
-                        pairs.add(new Pair(i, j));
-                    }
-                }
-            }
-
-            if (SHUFFLE) {
-                Collections.shuffle(pairs);
-            }
-
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(100));
-            table.setFont(plain);
-            table.setFontSize(fontSize);
-
-            for (Pair each : pairs) {
-
-                table.addCell(new Cell().add(paragraph(String.format(" %d - %d = ", each.first, each.second)))
-                                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                        .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                                        .setTextAlignment(TextAlignment.LEFT));
-            }
-
-            document.add(table);
-        }
-
-        document.close();
+        EasyPdf.portrait("%s/hundrakompisar.pdf", DIRECTORY)
+               .add(new EasyParagraph("Hundrakompisar"))
+               .space()
+               .add(table)
+               .createDocument();
     }
 
-    private void subtraktionTiotalsovergang() throws Exception {
-        String filename = String.format("%s/subtraktion-tiotalsövergång.pdf", DIRECTORY);
-
-        System.out.println("Creating file " + filename);
-
-        PdfFont plain = PdfFontFactory.createFont(StandardFonts.COURIER);
-
-        int fontSize = 18;
-
-        Document document = new Document(new PdfDocument(new PdfWriter(filename)), PageSize.A4);
-        document.setFont(plain);
-        document.setFontSize(fontSize);
-
-        {
-            float[] widths = {10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(100));
-
-            for (int i = 1; i <= 20; i++) {
-                String str = Integer.toString(i);
-                Paragraph paragraph = new Paragraph(str).setFontSize(fontSize);
-
-                table.addCell(new Cell().add(paragraph)
-                                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                        .setHorizontalAlignment(HorizontalAlignment.CENTER)
-                                        .setTextAlignment(TextAlignment.CENTER)
-                                        .setHeight(40));
-            }
-
-            document.add(table);
-        }
-
-        document.add(new Paragraph());
-        document.add(new Paragraph());
-        document.add(new Paragraph());
-        document.add(new Paragraph());
-
-        {
-            float[] widths = {10, 10, 10};
-
-            List<Pair> pairs = new ArrayList<>();
-
-            {
-                for (int i = 11; i < 20; i++) {
-                    for (int j = 2; j < 10; j++) {
-                        if (i - j < 10) {
-                            pairs.add(new Pair(i, j));
-                        }
-                    }
-                }
-            }
-
-            if (SHUFFLE) {
-                Collections.shuffle(pairs);
-            }
-
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(100));
-            table.setFont(plain);
-            table.setFontSize(fontSize);
-
-            for (Pair each : pairs) {
-                table.addCell(new Cell().add(paragraph(String.format(" %d - %d = ", each.first, each.second)))
-                                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                        .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                                        .setTextAlignment(TextAlignment.LEFT));
-            }
-
-            document.add(table);
-        }
-
-        document.close();
+    private void alla_tabeller() {
+        range(1, 10).forEach(each -> tabell(each));
     }
 
-    private void subtraktionMix() throws Exception {
-        String filename = String.format("%s/subtraktion-mix.pdf", DIRECTORY);
+    private void tabell(int tabell) {
+        EasyTable square = new EasyTable().rows(10)
+                                          .columns(10)
+                                          .withBorder()
+                                          .height(40);
 
-        System.out.println("Creating file " + filename);
+        for (int number : range(1, 100)) {
+            EasyCell cell = new EasyCell(number);
 
-        PdfFont plain = PdfFontFactory.createFont(StandardFonts.COURIER);
-
-        int fontSize = 18;
-
-        Document document = new Document(new PdfDocument(new PdfWriter(filename)), PageSize.A4);
-        document.setFont(plain);
-        document.setFontSize(fontSize);
-
-        {
-            float[] widths = {10, 10, 10};
-
-            List<Pair> pairs = new ArrayList<>();
-
-            {
-                for (int i = 4; i < 10; i++) {
-                    for (int j = 2; j < i; j++) {
-                        pairs.add(new Pair(i, j));
-                    }
-                }
+            if (number % tabell == 0) {
+                cell.bold();
+            }
+            else {
+                cell.grey();
             }
 
-            {
-                for (int i = 11; i < 20; i++) {
-                    for (int j = 2; j < 10; j++) {
-                        if (i - j < 10) {
-                            pairs.add(new Pair(i, j));
-                        }
-                    }
-                }
-            }
-
-            if (SHUFFLE) {
-                Collections.shuffle(pairs);
-            }
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(100));
-            table.setFont(plain);
-            table.setFontSize(fontSize);
-
-            for (Pair each : pairs) {
-                table.addCell(new Cell().add(paragraph(String.format(" %d - %d = ", each.first, each.second)))
-                                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                                        .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                                        .setTextAlignment(TextAlignment.LEFT));
-            }
-
-            document.add(table);
+            square.add(cell);
         }
 
-        document.close();
+        EasyTable sequence = new EasyTable().rows(1)
+                                            .columns(10)
+                                            .withBorder()
+                                            .height(40)
+                                            .add(new EasyCell(tabell * 1))
+                                            .add(new EasyCell(tabell * 2))
+                                            .add(EMPTY_CELL)
+                                            .add(EMPTY_CELL)
+                                            .add(EMPTY_CELL)
+                                            .add(EMPTY_CELL)
+                                            .add(EMPTY_CELL)
+                                            .add(EMPTY_CELL)
+                                            .add(EMPTY_CELL)
+                                            .add(new EasyCell(tabell * 10));
+
+        EasyTable exercise = new EasyTable().rows(10)
+                                            .columns(1)
+                                            .height(40);
+
+        shuffled(1, 10).forEach(each -> exercise.add(new EasyCell("%d %c %d = ____", each, MULTIPLY, tabell).left()));
+
+        EasyPdf.landscape( "%s/tabell-%d.pdf", DIRECTORY, tabell)
+               .add(square)
+               .pagebreak()
+               .add(sequence)
+               .doubleSpace()
+               .add(exercise)
+               .createDocument();
     }
 
-    private void hundraKompisar() throws Exception {
-        String filename = String.format("%s/hundrakompisar.pdf", DIRECTORY);
 
-        System.out.println("Creating file " + filename);
+    private List<Pair> getTiokompisar() {
+        List<Pair> kompisar = new ArrayList<>();
 
-        PdfFont plain = PdfFontFactory.createFont(StandardFonts.COURIER);
-
-        int fontSize = 18;
-
-        Document document = new Document(new PdfDocument(new PdfWriter(filename)), PageSize.A4);
-        document.setFont(plain);
-        document.setFontSize(fontSize);
-
-        document.add(new Paragraph("Hundrakompisar").setFontSize(fontSize));
-        document.add(new Paragraph());
-        document.add(new Paragraph());
-
-        {
-            float[] widths = {10, 10, 3, 10, 10, 3, 10, 10, 3};
-
-            Table table = new Table(widths);
-            table.setFixedLayout();
-            table.setWidth(UnitValue.createPercentValue(100));
-
-            List<Integer> numbers = IntStream.rangeClosed(0, 100)
-                                             .mapToObj(Integer::valueOf)
-                                             .collect(Collectors.toList());
-
-            if (SHUFFLE) {
-                Collections.shuffle(numbers);
-            }
-
-            numbers.stream().limit(45).forEach(each -> {
-                        // String str = String.format("%d . %d = %s", each, series, ANSWER_LINE);
-
-                        // Paragraph paragraph = new Paragraph(str).setFontSize(fontSize);
-
-                        table.addCell(new Cell().add(paragraph(each.toString()))
-                                                // .setBorder(Border.NO_BORDER)
-                                                .setVerticalAlignment(VerticalAlignment.BOTTOM)
-                                                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                                                .setTextAlignment(TextAlignment.LEFT)
-                                                .setHeight(40));
-
-                        table.addCell(new Cell().add(paragraph(" "))
-                                                // .setBorder(Border.NO_BORDER)
-                                                .setVerticalAlignment(VerticalAlignment.BOTTOM)
-                                                .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                                                .setTextAlignment(TextAlignment.LEFT)
-                                                .setHeight(40));
-
-                        table.addCell(new Cell().add(paragraph(" "))
-                                        .setBorder(Border.NO_BORDER)
-                                        .setVerticalAlignment(VerticalAlignment.BOTTOM)
-                                        .setHorizontalAlignment(HorizontalAlignment.LEFT)
-                                        .setTextAlignment(TextAlignment.LEFT)
-                                        .setHeight(40));
-
-
-            });
-
-
-            document.add(table);
+        for (int i = 1; i < 10; i++) {
+            kompisar.add(new Pair(Integer.toString(i), "___"));
+            kompisar.add(new Pair("___", Integer.toString(i)));
         }
 
-        document.close();
-    }
+        Collections.shuffle(kompisar);
 
-    private Paragraph paragraph(String text) {
-        int fontSize = 20;
-        return new Paragraph(text).setFontSize(fontSize);
+        return kompisar;
     }
 
     private class Pair {
-        int first;
-        int second;
+        String first;
+        String second;
 
         Pair(int first, int second) {
+            this.first = Integer.toString(first);
+            this.second = Integer.toString(second);
+        }
+
+        Pair(String first, String second) {
             this.first = first;
             this.second = second;
         }
     }
 
-    private class TioKompis {
-        String first;
-        String second;
-
-        TioKompis(int number, boolean isFirst) {
-            String str = Integer.toString(number);
-
-            this.first = isFirst ? str : ANSWER_LINE;
-            this.second = isFirst ? ANSWER_LINE : str;
-        }
-    }
-
     public static void main(String[] args) {
         try {
-            new Matte().tabell();
-            new Matte().multiplikation();
-            new Matte().tioKompisarPlus();
-            new Matte().tioKompisarMinus();
-            new Matte().addition();
-            new Matte().additionTiotalsovergang();
-            new Matte().subtraktion();
-            new Matte().subtraktionHogaEntal();
-            new Matte().subtraktionTiotalsovergang();
-            new Matte().subtraktionMix();
-            new Matte().hundraKompisar();
+            // TODO set directory on Matte ?
+            Matte matte = new Matte();
+
+            matte.multiplikation();
+
+            matte.tiokompisar_addition();
+            matte.tiokompisar_subtraktion();
+
+            matte.addition();
+            matte.addition_tiotalsovergang();
+
+            matte.subtraktion();
+            matte.subtraktion_hoga_ental();
+            matte.subtraktion_tiotalsovergang();
+            matte.subtraktion_mix();
+
+            matte.hundrakompisar();
+            matte.alla_tabeller();
         }
         catch (Exception e) {
             e.printStackTrace();
