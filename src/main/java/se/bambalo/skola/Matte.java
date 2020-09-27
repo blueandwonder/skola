@@ -1,5 +1,7 @@
 package se.bambalo.skola;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +25,7 @@ public class Matte {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String DIRECTORY = "/tmp/ruta";
+    private static final String DIRECTORY = "ruta";
 
     private static final char MULTIPLY = 183;
     private static final char PLUS = '+';
@@ -401,7 +403,8 @@ public class Matte {
 
     public static void main(String[] args) {
         try {
-            // TODO set directory on Matte ?
+        	Files.createDirectories(Paths.get(DIRECTORY));
+        	
             Matte matte = new Matte();
 
             matte.multiplikation();

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="output" path="bin/default"/>
+	<classpathentry output="bin/main" kind="src" path="src/main/java">
+		<attributes>
+			<attribute name="gradle_scope" value="main"/>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11/"/>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.2.3/cfd5385e0c5ed1c8a5dce57d86e79cf357153a64/logback-classic-1.2.3-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.2.3/7c4f3c474fb2c041d8028740440937705ebb473a/logback-classic-1.2.3.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/barcodes/7.1.10/d1b9fb98ac81c7b03da2ef30a5e9ace3d856cb13/barcodes-7.1.10-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/barcodes/7.1.10/92e6caec212f5e67cb897d1d2acf3fd19876d199/barcodes-7.1.10.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/font-asian/7.1.10/ec3cc6923c79ca3c9e19b416e3d150fd27cbf0dd/font-asian-7.1.10.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/sign/7.1.10/d75e8f4bbcf493e19b79a52b194e42c96f2844b0/sign-7.1.10-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/sign/7.1.10/62ad0b7dfdda499589fcede9a2d0494d235ecdf/sign-7.1.10.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/forms/7.1.10/f5b29d216f5c2542a9b73206b6bc8b7fd2ecfd9e/forms-7.1.10-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/forms/7.1.10/f231ba4b2522e040f9d46c3db65721f8a6d87328/forms-7.1.10.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/hyph/7.1.10/80967be9cd0d5f92924d1064c265b19b6c97180a/hyph-7.1.10.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/svg/7.1.10/c132237030a18e8544dbe7b56de6ca1f64db0fd6/svg-7.1.10-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/svg/7.1.10/33a8b79c5c8318328cd536a7370f7f6c578ddc11/svg-7.1.10.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/styled-xml-parser/7.1.10/c927f9bcab9e2328177d34b805b7c2ea0b476736/styled-xml-parser-7.1.10-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/styled-xml-parser/7.1.10/6ffbc4c96a89009598f022c0d3b7a6e074167d20/styled-xml-parser-7.1.10.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/layout/7.1.10/c960a1fcd6bb3118308048b8d0e931b568e4a585/layout-7.1.10-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/layout/7.1.10/adfdde65f36ff84d48b540338a15570baacc14fa/layout-7.1.10.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/pdfa/7.1.10/3c9995eb8844bd66aa5e4d88eb337eca32da5221/pdfa-7.1.10-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/pdfa/7.1.10/fdd5c75b81874fa806bb1b6bdc89257b32def3e8/pdfa-7.1.10.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/kernel/7.1.10/24923d2e44ac8686eaccc8a5284c22b067c1ce73/kernel-7.1.10-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/kernel/7.1.10/e969bf19b0d7e4692e56132f8ba10075b99cd51b/kernel-7.1.10.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/io/7.1.10/7fc40cb20f2b69615f91f049f4f929d14a8f7298/io-7.1.10-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/com.itextpdf/io/7.1.10/afd1d1d4307e1de704838481a94b49331072c184/io-7.1.10.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.30/71a1fdefa224da50f1db6306ce609981e20186c9/slf4j-api-1.7.30-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.30/b5a4b6d16ab13e34a88fae84c35cd5d68cac922c/slf4j-api-1.7.30.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.2.3/3ebabe69eba0196af9ad3a814f723fb720b9101e/logback-core-1.2.3-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.2.3/864344400c3d4d92dfeb0a305dc87d953677c03c/logback-core-1.2.3.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.64/5c87199786c06e1a53adf16b1998386bad52da89/bcpkix-jdk15on-1.64-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.64/3dac163e20110817d850d17e0444852a6d7d0bd7/bcpkix-jdk15on-1.64.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/lille/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.64/2881bfaf2c15e9e64b62c2a143db90db7a0d6035/bcprov-jdk15on-1.64-sources.jar" kind="lib" path="C:/Users/lille/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.64/1467dac1b787b5ad2a18201c0c281df69882259e/bcprov-jdk15on-1.64.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+</classpath>
